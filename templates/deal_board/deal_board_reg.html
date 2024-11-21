@@ -1,0 +1,86 @@
+{% include 'include/header.html' %}
+
+<style>
+    .clickable-row {
+        cursor: pointer;
+    }
+
+    /* 테이블을 플렉스 박스로 설정 */
+    #datatablesSimple {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 헤더와 바디 행을 플렉스 컨테이너로 설정 */
+    #datatablesSimple thead,
+    #datatablesSimple tbody {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* 각 행을 플렉스로 설정하여 열 비율을 제어 */
+    #datatablesSimple tr {
+        display: flex;
+        width: 100%;
+    }
+
+    /* 각 열에 비율을 지정 */
+    #datatablesSimple th:nth-child(1),
+    #datatablesSimple td:nth-child(1) {
+        flex: 1;
+    }
+
+    #datatablesSimple th:nth-child(2),
+    #datatablesSimple td:nth-child(2) {
+        flex: 10;
+    }
+
+    #datatablesSimple th:nth-child(3),
+    #datatablesSimple td:nth-child(3),
+    #datatablesSimple th:nth-child(4),
+    #datatablesSimple td:nth-child(4),
+    #datatablesSimple th:nth-child(5),
+    #datatablesSimple td:nth-child(5),
+    #datatablesSimple th:nth-child(6),
+    #datatablesSimple td:nth-child(6) {
+        flex: 2;
+    }
+</style>
+<main>
+    <h1>{{station}} 거래 게시판</h1>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">글 작성하기</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-edit me-1"></i>
+                글 작성 폼
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('deal_board_page.deal_board_reg_service',station=station) }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="station" id="station" value="{{station}}">
+                    <div class="form-group mb-3" style="width: 40% !important;">
+                        <label for="DEAL_BRD_TITL">제목</label>
+                        <input type="text" class="form-control" id="DEAL_BRD_TITL" name="DEAL_BRD_TITL" placeholder="제목을 입력하세요." required>
+                    </div>
+                    <div class="form-group mb-3" style="width: 40% !important;">
+                        <label for="DEAL_BRD_IMG_NAME">이미지</label>
+                        <input type="file" class="form-control" id="DEAL_BRD_IMG_NAME" name="DEAL_BRD_IMG_NAME" placeholder="이미지를 넣어주세요.">
+                    </div>
+                    <div class="form-group mb-3" style="width: 15% !important;">
+                        <label for="DEAL_BRD_PRICE">가격</label>
+                        <input type="number" class="form-control" id="DEAL_BRD_PRICE" name="DEAL_BRD_PRICE" placeholder="0" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="DEAL_BRD_CTNT">내용</label>
+                        <textarea class="form-control" id="DEAL_BRD_CTNT" name="DEAL_BRD_CTNT" rows="10" placeholder="내용을 입력하세요." required></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">작성 완료</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% include 'include/footer.html' %}

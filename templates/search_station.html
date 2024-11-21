@@ -1,0 +1,90 @@
+{% include 'include/header.html' %}                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">지하철역 검색</h1>
+                        <!-- 검색 폼 -->
+                        <div style="margin-bottom: 4px;">
+                            <form id="stationSearchForm"  action="/search/search_station" method="get">
+                                <input type="hidden" name="station" value="{{ station }}">
+                                <div class="input-group">
+                                    <input id="stationSearchInput" name="station_name" class="form-control" type="text" placeholder="역 이름 입력..." required />
+                                    <button class="btn btn-primary" id="searchButton" type="submit"><i class="fas fa-search"></i></button>  <!-- submit으로 하면 경로오류 -->
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 지도 표시 -->
+                        <div class="col-xl-12">
+                            <div class="card mb-4">
+                                <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+                                <div id="map" style="width:100%; height:700px;"></div>
+    
+                                <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e2e8ebf0b1d098160667e6397c27a92"></script>
+                                <script type="text/javascript">
+                                    const stations = {{ matching_stations | tojson }}; //매칭된 역 정보 받아오기
+                                    let map, markers = [], overlays = [];
+                                    
+                                    function initializeMap() { 
+                                        if (stations.length > 0) {
+                                            const firstStation = stations[0]; // 첫 번째 일치하는 역을 중앙으로 함
+                                            const mapCenter = new kakao.maps.LatLng(firstStation.latitude, firstStation.longitude);
+                                            
+                                            map = new kakao.maps.Map(document.getElementById('map'), {
+                                                center: mapCenter,
+                                                level: 6
+                                            });
+
+                                            const imageSrc = 'https://i.postimg.cc/Wz9bQ15H/icon.png';
+                                            const imageSize = new kakao.maps.Size(55, 54);
+                                            const imageOption = { offset: new kakao.maps.Point(27, 69) };
+                                            const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+                                            stations.forEach(station => {
+                                                const markerPosition = new kakao.maps.LatLng(station.latitude, station.longitude);
+                                                const marker = new kakao.maps.Marker({ 
+                                                    position: markerPosition, 
+                                                    image: markerImage, 
+                                                    clickable: true // 마커 클릭 가능
+                                                });
+                                                marker.setMap(map);
+                                                markers.push(marker);
+                                                const overlayContent = `<div class="customoverlay">
+                                                    <a href="/board/?station=${encodeURIComponent(station.name)}" target="_blank">
+                                                        <span class="title">${station.name}역</span>
+                                                    </a>
+                                                </div>`;
+                                                const content = `<div class="customoverlay">
+                                                                    <a><span class="title" onclick="redirectToInfoBoard('${station.name}')">${station.name}역</span></a>
+                                                                </div>`;
+
+                                                const overlay = new kakao.maps.CustomOverlay({ position: markerPosition, content, yAnchor: 1 });
+                                                overlay.setMap(map);
+                                                overlay.customPosition = markerPosition;
+                                                overlays.push(overlay);
+                                                // 마커 클릭 시 실시간 도착 정보 요청
+                                                kakao.maps.event.addListener(marker, 'click', () => {
+                                                    fetchRealtimeArrival(station.name);  // 역 이름으로 API 호출
+                                                });
+                                                
+                                            });
+                                            map.setCenter(mapCenter); 
+                                            map.setLevel(3);
+                                        } else {  
+                                            alert("검색 결과가 없습니다."); // 일치하는 역이 없을 경우 경고
+                                        }
+                                    }
+
+                                    window.onload = initializeMap;  // 페이지 로드 시 지도 초기화
+                                </script>
+                            </div>
+                        </div>
+                        <!-- 실시간 정보 표시 영역 -->
+                        <div class="col-xl-6">
+                            <div class="card mb-4" id="realtime-info-card">
+                                <div class="card-header"><i class="fas fa-subway"></i> 실시간 지하철 도착 정보</div>
+                                <div class="card-body" id="realtime-info">
+                                    <p>지하철역 마커를 클릭해 실시간 도착 정보를 확인하세요.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </main>
+{% include 'include/footer.html' %}

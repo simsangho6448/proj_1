@@ -1,0 +1,86 @@
+{% include 'include/header.html' %}
+<!---->
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">지하철역 검색</h1>
+                    <!-- 검색 폼 -->
+                    <div style="margin-bottom: 4px;">
+                        <form id="stationSearchForm"  action="/search/search_station" method="get">
+                            <input type="hidden" name="station" value="{{ station }}">
+                            <div class="input-group">
+                                <input id="stationSearchInput" name="station_name" class="form-control" type="text" placeholder="역 이름을 입력하세요" required />
+                                <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                     <!-- 지도 스타일시트 -->
+                            <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+                            <!-- 지도 표시 영역 -->
+                            <div id="map" style="width:100%; height:700px;"></div>
+                            <!-- 카카오 지도 API 및 초기화 스크립트 -->
+                            <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e2e8ebf0b1d098160667e6397c27a92"></script>
+                            <script type="text/javascript">
+                                const stations = {{ station_data | tojson }};  // 서버에서 전달된 역 데이터
+                                let map, markers = [], overlays = [];
+                        
+                                // 지도 초기화
+                                function initializeMap() {
+                                    map = new kakao.maps.Map(document.getElementById('map'), {
+                                        center: new kakao.maps.LatLng(37.5150, 126.9680),
+                                        level: 6
+                                    });
+                        
+                                    const markerImage = new kakao.maps.MarkerImage(
+                                        'https://i.postimg.cc/Wz9bQ15H/icon.png',
+                                        new kakao.maps.Size(55, 54),
+                                        { offset: new kakao.maps.Point(27, 69) }
+                                    );
+                        
+                                    stations.forEach(station => {
+                                        const markerPosition = new kakao.maps.LatLng(station.LAT, station.LOT);
+                                        const marker = new kakao.maps.Marker({
+                                            position: markerPosition,
+                                            image: markerImage,
+                                            clickable: true
+                                        });
+                                        marker.setMap(map);
+                                        markers.push(marker);
+                                        const overlayContent = `<div class="customoverlay">
+                                                <a href="/board/?station=${encodeURIComponent(station.BLDN_NM)}" target="_blank">
+                                                    <span class="title">${station.BLDN_NM}역</span>
+                                                </a>
+                                            </div>`;
+
+                                        const overlay = new kakao.maps.CustomOverlay({ position: markerPosition, content: overlayContent, yAnchor: 1 });
+                                        overlay.setMap(map);
+                                        overlays.push(overlay);
+                        
+                                        // 마커 클릭 시 실시간 도착 정보 요청
+                                        kakao.maps.event.addListener(marker, 'click', () => {
+                                            map.setCenter(markerPosition); // 중앙으로 정렬
+                                            map.setLevel(4);
+                                            fetchRealtimeArrival(station.BLDN_NM);  // 역 이름으로 API 호출
+                                        });
+                                    });
+                                }
+                                window.onload = initializeMap;  // 페이지 로드 시 지도 초기화
+                            </script>
+                        </div>
+                    </div>
+                    <!-- 실시간 정보 표시 영역 -->
+                    <div class="col-xl-6">
+                        <div class="card mb-4" id="realtime-info-card">
+                            <div class="card-header"><i class="fas fa-subway"></i> 실시간 지하철 도착 정보</div>
+                            <div class="card-body" id="realtime-info">
+                                <p>지하철역 마커를 클릭해 실시간 도착 정보를 확인하세요.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+{% include 'include/footer.html' %}

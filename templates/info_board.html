@@ -1,0 +1,50 @@
+{% include 'include/header.html' %}
+                <main>
+                    <div class="container-fluid px-4">
+                        
+                        <h1></h1>
+                        <h1>{{ station }} 게시판</h1>
+                        <p>현재 로그인된 사용자: {{ user_id }}</p>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                정보 게시판
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>번호</th>
+                                            <th>제목</th>
+                                            <th>작성자</th>
+                                            <th>조회수</th>
+                                            <th>최종작성일</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for post in info_board %}
+                                        <tr data-id="{{ post.id }}" class="clickable-row">
+                                            <td>{{ post.INFO_BRD_NO }}</td>
+                                            <td>
+                                                <!-- url_for로 게시글 보기 링크 경로 생성 (블루프린트 사용) -->
+                                                <a href="{{ url_for('info_board.view_post', post_id=post.INFO_BRD_NO) }}">
+                                                    {{ post.INFO_BRD_TITLE }}
+                                                </a>
+                                            </td>
+                                            <td>{{ post.REGID }}</td>
+                                            <td>{{ post.INFO_BRD_HIT }}</td>
+                                            <td>{{ post.INFO_BRD_updated_at }}</td>
+                                        </tr>                                       
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                
+                                <!-- 글 작성하기 버튼: url_for로 게시글 생성 링크 경로 생성 -->
+                                <div class="text-end mt-3">
+                                    <a href="{{ url_for('info_board.create_post',station=station) }}" class="btn btn-primary">글 작성하기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+{% include 'include/footer.html' %}

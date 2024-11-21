@@ -1,0 +1,60 @@
+{% include 'include/header.html' %}
+            <main>
+                <div class="container-fluid px-4">
+                    <h1>
+                        <span class="station-name">{{ post[7] }}역 소통 게시판</span>
+                        <span class="title-divider">|</span>
+                        <span class="post-name">{{ post[1] }}</span>
+                    </h1>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>제목</th>
+                                        <td>{{ post[1] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>작성자</th>
+                                        <td>{{ post[3] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>작성 시간</th>
+                                        <td>{{ post[5] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>최종 수정 시간</th>
+                                        <td>{{ post[6] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>조회수</th>
+                                        <td>{{ post[4] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <!-- <th>내용</th>
+                                        <td>
+                                            <div class="form-control">
+                                                <label for="INFO_BRD_CTNT" class="visually-hidden">내용</label>
+                                                <textarea class="form-control" id="INFO_BRD_CTNT" name="INFO_BRD_CTNT" rows="10" readonly>{{ post[2] }}</textarea>
+                                            </div>
+                                        </td> -->
+                                        <th>내용</th>
+                                        <td>
+                                            <label for="INFO_BRD_CTNT" class="visually-hidden">내용</label>
+                                            <textarea class="form-control" id="INFO_BRD_CTNT" name="INFO_BRD_CTNT" rows="10" readonly>{{ post[2] }}</textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                                <!-- session['user_id']와 post.REGID가 같을 경우에만 수정하기 버튼을 보여줌 -->
+                                {% if session['user_id'] == post[3] %}
+                                <a href="{{ url_for('info_board.edit_post', post_id=post[0], station=post[7]) }}" class="btn btn-primary">수정하기</a>
+                                {% endif %}
+                            <a href="{{ url_for('info_board.info_board_list', station=post[7]) }}" class="btn btn-secondary">게시판으로 돌아가기</a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+{% include 'include/footer.html' %}

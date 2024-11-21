@@ -1,0 +1,30 @@
+{% include 'include/header.html' %}
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">글 작성하기</h1>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-edit me-1"></i>
+                                글 작성 폼
+                            </div>
+                            <div class="card-body">
+                                <form action="/board/create_post" method="POST">
+                                    <input type="hidden" name="station" value="{{station}}">
+                                    <div class="form-group mb-3">
+                                        <label for="title">제목</label>
+                                        <input type="text" class="form-control" id="INFO_BRD_TITLE" name="INFO_BRD_TITLE" placeholder="제목을 입력하세요" required>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="content">내용</label>
+                                        <textarea class="form-control" id="INFO_BRD_CTNT" name="INFO_BRD_CTNT" rows="10" placeholder="내용을 입력하세요" required></textarea>
+                                    </div>
+                                    <div class="text-end">
+                                        <a href="{{ url_for('info_board.info_board_list',station=station) }}" class="btn btn-secondary">게시판으로 돌아가기</a>
+                                        <button type="submit" class="btn btn-primary">작성 완료</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+{% include 'include/footer.html' %}
