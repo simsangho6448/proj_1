@@ -5,7 +5,7 @@ import requests
 # 실시간 지하철 정보를 받아오는 함수
 def fetch_realtime_arrival_data(station_name):
     """ 주어진 역 이름으로 서울시 API에서 실시간 지하철 정보를 가져옴 """
-    api_url = f"http://swopenapi.seoul.go.kr/api/subway/6b586f764b686a733233766a617670/json/realtimeStationArrival/1/788/{station_name}"
+    api_url = f"http://swopenapi.seoul.go.kr/api/subway/485770756867616831387475496956/json/realtimeStationArrival/1/788/{station_name}"
     response = requests.get(api_url)
 
     if response.status_code == 200:

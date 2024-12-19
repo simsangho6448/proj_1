@@ -5,7 +5,7 @@ import os
 # 역 정보를 불러오는 함수
 def fetch_station_data():
     try:
-        api_key = os.getenv("SEOUL_API_KEY", "69796c6673686a7334304a564c5561") 
+        api_key = os.getenv("SEOUL_API_KEY", "485770756867616831387475496956") 
         response = requests.get(f'http://openapi.seoul.go.kr:8088/{api_key}/json/subwayStationMaster/1/788/')
         response.raise_for_status()
         
