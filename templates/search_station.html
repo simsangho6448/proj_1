@@ -17,7 +17,8 @@
                                 <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
                                 <div id="map" style="width:100%; height:700px;"></div>
     
-                                <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e2e8ebf0b1d098160667e6397c27a92"></script>
+                                <!-- <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7e2e8ebf0b1d098160667e6397c27a92"></script> -->
+                                <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a3250e962f669a4634c2a6c327500761"></script>
                                 <script type="text/javascript">
                                     const stations = {{ matching_stations | tojson }}; //매칭된 역 정보 받아오기
                                     let map, markers = [], overlays = [];
